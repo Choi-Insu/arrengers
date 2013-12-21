@@ -1,0 +1,111 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:uc="http://www.quickzip.org/UserControls"
+    xmlns:ucc="clr-namespace:QuickZip.IO.PIDL.UserControls;assembly=QuickZip.IO.PIDL.UserControls"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:src="clr-namespace:FileExplorerText.TagTree"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="PIDLTest.PIDLMVVM"
+    Title="Arrengers" Height="491" Width="756" mc:Ignorable="d">
+    <Window.Resources>
+        <uc:ExToStringConverter x:Key="ets" />
+
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="viewModes">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="ucc:ViewMode"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <DataTemplate x:Key="fileNameTemplate" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding ImgUri}" Width="17" Height="17"  Grid.Column="0"/>                 
+                <TextBlock Foreground="Black"  Grid.Column="1">
+                    <TextBlock Text="[spa]" />
+                </TextBlock>
+                <TextBlock Foreground="Black"  Grid.Column="2">
+                    <TextBlock.Text>
+                    <Binding Path="FileName"/>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Grid>            
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="22" />
+            <RowDefinition Height="1" />
+            <RowDefinition Height="416*" />
+            <RowDefinition Height="25" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Column="0" Grid.ColumnSpan="2"  Grid.Row="0">
+            <MenuItem Header="TAG(_T)"></MenuItem>
+            <MenuItem Header="BOOKMARK(_B)"></MenuItem>
+            <MenuItem Header="FOLDER SET(_F)"></MenuItem>
+        </Menu>
+
+        <!-- <ComboBox ItemsSource="{Binding Source={StaticResource viewModes}}"
+                  SelectedValue="{Binding ViewMode, ElementName=flist}" Margin="210,0,0,367" Grid.Column="1" Grid.Row="3" /> -->
+        <StackPanel Orientation="Horizontal"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+            <Button Content="뒤" Height="23" HorizontalAlignment="Stretch" Name="button1"  Width="32" />
+            <Button Content="앞" Height="23" Name="button2"  Width="32"  />
+            <TextBox Text="{Binding SelectedDirectory, Converter={StaticResource ets}, ElementName=dirTree, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2" Margin="5,0,0,0" Width="2000" />
+        </StackPanel>
+        <!-- <TextBox Text="{Binding SelectedDirectory, Converter={StaticResource ets}, ElementName=dirTree, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="60,21,0,1" Grid.RowSpan="2" Grid.ColumnSpan="2" /> -->
+
+        <!-- <ucc:DirectoryTree Grid.Column="0" Grid.Row="3" x:Name="dirTree" AutoCollapse="True"    /> -->
+        <TabControl x:Name="tabControl" Grid.Row="3" Margin="0,21,0,0" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="탐색">
+                <TabItem.Content>
+                    <ucc:DirectoryTree  x:Name="dirTree" AutoCollapse="True"    />
+                </TabItem.Content>
+            </TabItem>
+            <TabItem Header="TAG">
+                <TabItem.Content>
+                    <src:TagTreeView SelectedItemChanged="TagTreeView_SelectedItemChanged" />
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+        <ListView ItemsSource="{Binding TagedItemCollection}" Grid.Column="1" Grid.Row="3" x:Name="flist2" Visibility="Hidden" Margin="0,21,0,0" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="180" Header="Name" 
+              CellTemplate="{StaticResource fileNameTemplate}"  />
+                    <GridViewColumn Width="100" Header="Type"  
+              DisplayMemberBinding="{Binding FileExension}" />
+                    <GridViewColumn Width="100" Header="Time" 
+              DisplayMemberBinding="{Binding ModifyDate}" />
+                    <GridViewColumn Width="100" Header="Size" 
+              DisplayMemberBinding="{Binding FileSize}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <ucc:FileList Grid.Column="1" Grid.Row="3" x:Name="flist" ViewMode="vmGrid"
+                     SortBy="sortByLastWriteTime" SortDirection="Descending" 
+                     CurrentDirectory="{Binding SelectedDirectory, ElementName=dirTree, Mode=TwoWay}" Margin="0,21,0,0" />
+        <TextBlock Grid.Column="0" Grid.Row="4"  Text="{Binding SelectedEntries.Count, ElementName=flist}" Width="20" 
+                   TextAlignment="Left" HorizontalAlignment="Left" />
+        <Button Grid.Column="1" Grid.Row="4"  Content="Focus Last Item" Click="Button_Click" />
+
+
+        <!-- Or Simplier -->
+        <!--<uc:DirectoryTree Grid.Column="0" Grid.Row="1" x:Name="dirTree" 
+                          RootDirectory="{uc:Ex FullName=::{20D04FE0-3AEA-1069-A2D8-08002B30309D}}"
+                          SelectedDirectory="{uc:Ex C:\\Temp}"
+                          />-->
+
+    </Grid>
+</Window>
