@@ -102,6 +102,7 @@ namespace FileExplorerText.TagTree
                     if (elementdata.SubTag.Length > 0)
                     {
                         upperTagCount++;
+
                     }
                 }
 
