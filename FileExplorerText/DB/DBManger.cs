@@ -63,5 +63,15 @@ namespace FileExplorerText.DB
 
             sqliteCon.Close();
         }
+
+        public void executeNoResult()
+        {
+            sqliteCon.Open();
+            createCommand = new SQLiteCommand(query, sqliteCon);
+            createCommand.ExecuteNonQuery();
+            dataReader = createCommand.ExecuteReader();            
+
+            sqliteCon.Close();
+        }
     }
 }

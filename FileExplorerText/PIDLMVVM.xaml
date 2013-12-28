@@ -78,7 +78,7 @@
                 </TabItem.Content>
             </TabItem>
         </TabControl>
-        <ListView ItemsSource="{Binding TagedItemCollection}" Grid.Column="1" Grid.Row="3" x:Name="flist2" Visibility="Hidden" Margin="0,21,0,0" >
+        <ListView ItemsSource="{Binding TagedItemCollection}" Grid.Column="1" Grid.Row="3" x:Name="flist2" AllowDrop="True" Visibility="Hidden" Margin="0,21,0,0" PreviewDragOver="Flist2_PreviewDragOver" PreviewDrop="flist2_PreviewDrop">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="180" Header="Name" 

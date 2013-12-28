@@ -26,7 +26,8 @@ namespace PIDLTest
     public partial class PIDLMVVM : Window
     {
         ObservableCollection<TagedItem> _TagedItemCollection =
-        new ObservableCollection<TagedItem>();        
+        new ObservableCollection<TagedItem>();
+        TagTreeViewItem selectedItem = null;
 
         public PIDLMVVM()
         {
@@ -76,11 +77,30 @@ namespace PIDLTest
         private void TagTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             DBManger dbManager = new DBManger();
-            TagTreeViewItem selectedItem = e.NewValue as TagTreeViewItem;
+            selectedItem = e.NewValue as TagTreeViewItem;
 
             string query = "SELECT * FROM TAGTABLE WHERE TAGID LIKE '%" + selectedItem.TagCategory.TagId +"%'";
             dbManager.Query = query;
             dbManager.execute(ref _TagedItemCollection);              
+        }        
+
+        private void Flist2_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            
+        }
+
+        private void flist2_PreviewDrop(object sender, DragEventArgs e)
+        {
+            if(selectedItem == null)
+                MessageBox.Show("No selected Tag!");
+            else{
+                MessageBox.Show(""+selectedItem.TagCategory.TagId);
+                DBManger dbManager = new DBManger();                
+
+                string query = "INSERT into * FROM TAGTABLE WHERE TAGID LIKE '%" + selectedItem.TagCategory.TagId + "%'";
+                dbManager.Query = query;
+                dbManager.execute(ref _TagedItemCollection);  
+            }
         }        
         
     }
